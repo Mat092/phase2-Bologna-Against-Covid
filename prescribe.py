@@ -22,7 +22,7 @@ def prescribe(start_date: str,
     See 2020-08-01_2020-08-04_prescriptions_example.csv for an example
     """
     # !!! YOUR CODE HERE !!!
-    raise NotImplementedError
+    print("CIao")
 
 
 # !!! PLEASE DO NOT EDIT. THIS IS THE OFFICIAL COMPETITION API !!!
