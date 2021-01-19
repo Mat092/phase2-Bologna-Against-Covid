@@ -7,6 +7,11 @@ import pandas as pd
 import numpy as np
 from covid_xprize.validation.scenario_generator import get_raw_data, generate_scenario
 
+from covid_xprize.standard_predictor.xprize_predictor import XPrizePredictor
+
+# Fixed weights for the standard predictor.
+MODEL_WEIGHTS_FILE = os.path.join("models", "trained_model_weights.h5")
+
 DATA_URL = "https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv"
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(ROOT_DIR, 'data')
@@ -112,13 +117,12 @@ def get_predictions(start_date_str, end_date_str, pres_df, countries=None):
 
     # Write ips_df to file
     ips_df.to_csv(TMP_PRESCRIPTION_FILE)
-
     # Use full path of the local file passed as ip_file
     ip_file_full_path = os.path.abspath(TMP_PRESCRIPTION_FILE)
 
     # Go to covid-xprize root dir to access predict script
     wd = os.getcwd()
-    os.chdir("../../../..")
+    os.chdir("../")
 
     # Run script to generate predictions
     output_str = subprocess.check_output(
@@ -183,3 +187,29 @@ def generate_costs(distribution='ones'):
         df = df.round(2)
 
     return df
+
+def predict(start_date: str,
+            end_date: str,
+            path_to_ips_file: str,
+            output_file_path):
+    """
+    Generates and saves a file with daily new cases predictions for the given countries, regions and intervention
+    plans, between start_date and end_date, included.
+    :param start_date: day from which to start making predictions, as a string, format YYYY-MM-DDD
+    :param end_date: day on which to stop making predictions, as a string, format YYYY-MM-DDD
+    :param path_to_ips_file: path to a csv file containing the intervention plans between inception date (Jan 1 2020)
+     and end_date, for the countries and regions for which a prediction is needed
+    :param output_file_path: path to file to save the predictions to
+    :return: Nothing. Saves the generated predictions to an output_file_path CSV file
+    with columns "CountryName,RegionName,Date,PredictedDailyNewCases"
+    """
+    # !!! YOUR CODE HERE !!!
+    predictor = XPrizePredictor(MODEL_WEIGHTS_FILE, DATA_FILE)
+    # Generate the predictions
+    preds_df = predictor.predict(start_date, end_date, path_to_ips_file)
+    # Create the output path
+    #os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
+    # Save to a csv file
+    preds_df.to_csv(output_file_path, index=False)
+    print(f"Saved predictions to {output_file_path}")
+    return preds_df
