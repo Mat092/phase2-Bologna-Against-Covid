@@ -4,7 +4,7 @@ import os
 import subprocess
 import urllib.request
 import pandas as pd
-
+import numpy as np
 from covid_xprize.validation.scenario_generator import get_raw_data, generate_scenario
 
 DATA_URL = "https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv"
@@ -16,6 +16,7 @@ PREDICT_MODULE = 'covid_xprize/standard_predictor/predict.py'
 TMP_PRED_FILE_NAME = 'tmp_predictions_for_prescriptions/preds.csv'
 TMP_PRESCRIPTION_FILE = 'tmp_prescription.csv'
 
+DATA_FILE = os.path.join("data", "OxCGRT_latest.csv")
 
 CASES_COL = ['NewCases']
 
@@ -139,5 +140,46 @@ def get_predictions(start_date_str, end_date_str, pres_df, countries=None):
 
     # Return to prescriptor dir
     os.chdir(wd)
+
+    return df
+
+
+def generate_costs(distribution='ones'):
+    """
+    Returns df of costs for each IP for each geo according to distribution.
+
+    Costs always sum to #IPS (i.e., len(IP_COLS)).
+
+    Available distributions:
+        - 'ones': cost is 1 for each IP.
+        - 'uniform': costs are sampled uniformly across IPs independently
+                     for each geo.
+    """
+    assert distribution in ['ones', 'uniform'], \
+           f'Unsupported distribution {distribution}'
+
+
+    df = get_raw_data(DATA_FILE, latest=False)
+
+    # Reduce df to one row per geo
+    df = df.groupby(['CountryName', 'RegionName']).mean().reset_index()
+
+    # Reduce to geo id info
+    df = df[['CountryName', 'RegionName']]
+
+    if distribution == 'ones':
+        df[IP_COLS] = 1
+
+    elif distribution == 'uniform':
+
+        # Generate weights uniformly for each geo independently.
+        nb_geos = len(df)
+        nb_ips = len(IP_COLS)
+        samples = np.random.uniform(size=(nb_ips, nb_geos))
+        weights = nb_ips * samples / samples.sum(axis=0)
+        df[IP_COLS] = weights.T
+
+        # Round weights for better readability with neglible loss of generality.
+        df = df.round(2)
 
     return df
