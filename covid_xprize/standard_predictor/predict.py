@@ -1,11 +1,15 @@
 # Copyright 2020 (c) Cognizant Digital Business, Evolutionary AI. All rights reserved. Issued under the Apache 2.0 License.
 
 import argparse
-import os
+import os,sys
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+print(ROOT_DIR)
+sys.exit
 
 from covid_xprize.standard_predictor.xprize_predictor import XPrizePredictor
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 # Fixed weights for the standard predictor.
 MODEL_WEIGHTS_FILE = os.path.join(ROOT_DIR, "models", "trained_model_weights.h5")
