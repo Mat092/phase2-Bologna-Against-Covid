@@ -42,10 +42,6 @@ df_historical = df_historical[keys]
 
 geoids = pd.unique(df_historical['GeoID'])
 
-predictor = XPrizePredictor(utils.MODEL_WEIGHTS_FILE, utils.DATA_FILE)
-new_cases = predictor.predict(start_date_str, end_date_str, utils.DATA_FILE)
-
-sys.exit()
 data = []
 
 first_day = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')

@@ -134,7 +134,6 @@ class XPrizePredictor(object):
                 npis_gdf = npis_df[(npis_df.Date >= geo_start_date) & (npis_df.Date <= end_date)]
 
                 pred_new_cases = self._get_new_cases_preds(cdf, g, npis_gdf, country_samples)
-                print(pred_new_cases)
             # Append forecast data to results to return
             country = npis_df[npis_df.GeoID == g].iloc[0].CountryName
             region = npis_df[npis_df.GeoID == g].iloc[0].RegionName
