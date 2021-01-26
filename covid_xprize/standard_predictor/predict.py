@@ -11,11 +11,6 @@ from covid_xprize.standard_predictor.xprize_predictor import XPrizePredictor
 
 
 
-# Fixed weights for the standard predictor.
-MODEL_WEIGHTS_FILE = os.path.join(ROOT_DIR, "models", "trained_model_weights.h5")
-
-DATA_FILE = os.path.join(ROOT_DIR, 'data', "OxCGRT_latest.csv")
-
 
 def predict(start_date: str,
             end_date: str,
@@ -33,7 +28,7 @@ def predict(start_date: str,
     with columns "CountryName,RegionName,Date,PredictedDailyNewCases"
     """
     # !!! YOUR CODE HERE !!!
-    predictor = XPrizePredictor(MODEL_WEIGHTS_FILE, DATA_FILE)
+    predictor = XPrizePredictor()
     # Generate the predictions
     preds_df = predictor.predict(start_date, end_date, path_to_ips_file)
     # Create the output path
