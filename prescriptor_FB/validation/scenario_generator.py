@@ -21,7 +21,10 @@ LOGGER = logging.getLogger('scenario_generator')
 DATA_URL = "https://raw.githubusercontent.com/OxCGRT/covid-policy-tracker/master/data/OxCGRT_latest.csv"
 ID_COLS = ['CountryName',
            'RegionName',
-           'Date']
+           'Date',
+           'GeoID',
+           'NewCases']
+
 NPI_COLUMNS = ['C1_School closing',
                'C2_Workplace closing',
                'C3_Cancel public events',
