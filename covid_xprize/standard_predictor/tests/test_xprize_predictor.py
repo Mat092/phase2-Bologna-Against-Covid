@@ -28,3 +28,4 @@ class TestXPrizePredictor(unittest.TestCase):
         predictor = XPrizePredictor(None, DATA_FILE)
         model = predictor.train()
         self.assertIsNotNone(model)
+

@@ -12,9 +12,11 @@ ROOT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
 # Local file
 DATA_PATH = ROOT_DIR / 'data'
 DATA_FILE = DATA_PATH / 'OxCGRT_latest.csv'
-DATA_PREDICTION = DATA_PATH / 'ips_predict.csv'
+INPUT_DATA = DATA_PATH / 'input_data.csv'
 # Model file
 MODEL_WEIGHTS_FILE = ROOT_DIR / 'standard_predictor' / 'models' / 'trained_model_weights.h5'
+# Surrogate Dataset
+SURROGATE_DATA_FILE = DATA_PATH / 'surrogate_dataset.csv'
 
 NPI_COLUMNS = ['C1_School closing',
                'C2_Workplace closing',
