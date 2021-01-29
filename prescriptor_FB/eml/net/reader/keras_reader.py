@@ -7,8 +7,6 @@ import numpy as np
 import keras.models as kmodels
 import keras.layers as klayers
 
-from eml.net import describe
-
 # import importlib
 
 # Import custom modules
@@ -20,28 +18,9 @@ from eml.net import describe
 # import model
 # importlib.reload(model)
 
+from eml.net import describe
+
 def read_keras_sequential(kmodel):
-    """ Import nueral network model from keras
-
-    Casts neural network into custom representation, available at
-    :obj:`eml.net.describe.DTNet`
-
-    Parameters
-    ----------
-        kmodel : obj:`keras.models.Sequential` 
-            Trained keras neural network
-
-    Returns
-    -------
-        Neural Network : :obj:`eml.net.describe.DNRNet`
-            Neural Network with custom representation
-
-    Raises
-    ------
-        ValueError
-            If the layer type is not supported
-
-    """ 
     # Build a DNR network model
     net = describe.DNRNet()
     # Add input layer

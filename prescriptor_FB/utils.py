@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
+import os, sys
 import urllib
+import datetime
 import pandas as pd
 from pathlib import Path
 
@@ -52,6 +53,10 @@ IP_MAX_VALUES = {
     'H6_Facial Coverings': 4
 }
 
+NB_LOOKBACK_DAYS = 21
+
+LB_DAYS_COLUMNS = ['lb_days_' + str(i) for i in range(NB_LOOKBACK_DAYS)]
+
 def add_geo_id(df):
     df['GeoID'] = df['CountryName'] + '__' + df['RegionName'].astype(str)
     return df
@@ -87,3 +92,22 @@ def prepare_historical_df():
         df.update(df.groupby('GeoID')[ip_col].ffill().fillna(0))
 
     return df
+
+def create_input_data(geo_id, npi, start_date_str, days):
+    # creates input data
+    # bascially for a given npi and GeoID creates a list of NPI with increasing dates
+    data = []
+    date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')
+    for _ in range(days):
+        dict_data = {}
+        dict_data['CountryName'] = geo_id.split('__')[0]
+        dict_data['RegionName'] = geo_id.split('__')[1]
+        for i, key in enumerate(NPI_COLUMNS):
+            dict_data[key] = npi[i]
+        dict_data['Date'] = date
+        date += datetime.timedelta(days=1)
+        data.append(dict_data)
+    return data
+
+def mean(x):
+    return sum(x)/len(x)
